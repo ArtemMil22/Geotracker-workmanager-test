@@ -8,6 +8,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.geotracker_workmanager_test.domain.LocationRepository
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_SHORT
 import com.google.android.material.snackbar.Snackbar
@@ -21,8 +22,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view ->
-            // По нажатию на FAB будет выполняться метод onClick()
+        findViewById<FloatingActionButton>(R.id.fab).setOnClickListener {
             onClick()
         }
     }
@@ -35,7 +35,8 @@ class MainActivity : AppCompatActivity() {
             // Если нет - то запрашиваем
             ActivityCompat.requestPermissions(
                 this,
-                listOf(Manifest.permission.ACCESS_COARSE_LOCATION).toTypedArray(),
+                listOf(Manifest.permission.ACCESS_COARSE_LOCATION)
+                    .toTypedArray(),
                 COARSE_LOCATION_CODE
             )
         }
@@ -43,8 +44,10 @@ class MainActivity : AppCompatActivity() {
 
     // Метод проверки есть ли права на получение координат
     private fun isPermissionGranted(): Boolean {
-        return (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED)
+        return (ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED)
     }
 
     // Если права есть, то в методе getLocation() через репозиторий получаем координаты
@@ -66,7 +69,8 @@ class MainActivity : AppCompatActivity() {
     // После того как пользователь разрешил, через репозиторий получаем координаты
     override fun onRequestPermissionsResult(
         requestCode: Int,
-        permissions: Array<String>, grantResults: IntArray
+        permissions: Array<String>,
+        grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
@@ -74,7 +78,6 @@ class MainActivity : AppCompatActivity() {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     startWork()
                 } else {
-                    // Если прав нет - показываем предупреждение
                     Snackbar.make(
                         fab,
                         "Вы не дали разрешение на получение геолокации",

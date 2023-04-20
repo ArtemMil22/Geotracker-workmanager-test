@@ -1,4 +1,4 @@
-package com.example.geotracker_workmanager_test
+package com.example.geotracker_workmanager_test.database
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -10,7 +10,7 @@ import io.reactivex.Single
 interface GeoInfoDataAccessObject {
 
     @Query("SELECT * FROM $TABLE_NAME")
-    fun getAllInfo():List<GeoInfo>
+    fun getAllInfo(): List<GeoInfo>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(info: GeoInfo): Single<Unit>

@@ -4,13 +4,18 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import androidx.work.*
+import com.example.geotracker_workmanager_test.database.GeoInfo
+import com.example.geotracker_workmanager_test.database.GeoInfoDatabase
+import com.example.geotracker_workmanager_test.domain.LocationRepository
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 
 import java.util.concurrent.TimeUnit
 
-class LocationWorker(private val context: Context, params: WorkerParameters) :
-    RxWorker(context, params) {
+class LocationWorker(
+    private val context: Context,
+    params: WorkerParameters
+) : RxWorker(context, params) {
 
     // Репозиторий для работы с таблицей БД
     private val dao by lazy { GeoInfoDatabase.getDatabase(context).wordDao() }
@@ -21,7 +26,16 @@ class LocationWorker(private val context: Context, params: WorkerParameters) :
         val repo = LocationRepository(context)
         return repo.getLocation()
             .observeOn(Schedulers.io())
-            .flatMap { dao.insert(GeoInfo(0, it.latitude, it.longitude, System.currentTimeMillis())) }
+            .flatMap {
+                dao.insert(
+                    GeoInfo(
+                        0,
+                        it.latitude,
+                        it.longitude,
+                        System.currentTimeMillis()
+                    )
+                )
+            }
             .map { Result.success() }
             .onErrorReturn {
                 it.message?.let { it1 -> Log.d("LocationWorker", it1) }
@@ -39,7 +53,11 @@ class LocationWorker(private val context: Context, params: WorkerParameters) :
 
         // Метод для создания PeriodicWorkRequest
         private fun createWorkRequest(data: Data): PeriodicWorkRequest {
-            return PeriodicWorkRequest.Builder(LocationWorker::class.java, 15, TimeUnit.MINUTES)
+            return PeriodicWorkRequest.Builder(
+                LocationWorker::class.java,
+                15,
+                TimeUnit.MINUTES
+            )
                 .setConstraints(createConstraints())
                 .setInputData(data)
                 .addTag(SIMPLE_WORKER_TAG)
@@ -59,7 +77,8 @@ class LocationWorker(private val context: Context, params: WorkerParameters) :
 
         // Метод для остановки
         fun cancelWork(context: Context) {
-            WorkManager.getInstance(context).cancelAllWorkByTag(SIMPLE_WORKER_TAG)
+            WorkManager.getInstance(context)
+                .cancelAllWorkByTag(SIMPLE_WORKER_TAG)
         }
     }
 }

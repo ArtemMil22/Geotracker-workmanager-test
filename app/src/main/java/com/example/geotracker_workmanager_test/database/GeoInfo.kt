@@ -1,4 +1,4 @@
-package com.example.geotracker_workmanager_test
+package com.example.geotracker_workmanager_test.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -6,11 +6,11 @@ import androidx.room.PrimaryKey
 const val TABLE_NAME = "geo_info"
 
 @Entity(tableName = TABLE_NAME)
-class GeoInfo (
+class GeoInfo(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
     val latitude: Double,
     val longitude: Double,
-    val data:Long
+    val data: Long
 
 )

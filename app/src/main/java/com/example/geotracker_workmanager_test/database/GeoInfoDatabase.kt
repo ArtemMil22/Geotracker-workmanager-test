@@ -1,4 +1,4 @@
-package com.example.geotracker_workmanager_test
+package com.example.geotracker_workmanager_test.database
 
 import android.content.Context
 import androidx.room.Database

@@ -1,4 +1,6 @@
-package com.example.geotracker_workmanager_test
+@file:Suppress("DEPRECATION")
+
+package com.example.geotracker_workmanager_test.domain
 
 import android.content.Context
 import android.location.Location
@@ -8,16 +10,16 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import io.reactivex.Single
 
-class LocationRepository(val context: Context) {
+class LocationRepository(private val context: Context) {
 
     fun getLocation(): Single<Location> {
         return Single.create { emitter ->
+
             var location: Location? = null
             val fusedLocation = LocationServices.getFusedLocationProviderClient(context)
-
             val locationCallback = object : LocationCallback() {}
-
             val locationRequest = LocationRequest()
+
             locationRequest.interval = UPDATE_INTERVAL_IN_MILLISECONDS
             locationRequest.fastestInterval = FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS
             locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY

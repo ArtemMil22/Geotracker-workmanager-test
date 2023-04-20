@@ -12,7 +12,7 @@ class GeoApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         SoLoader.init(this, false)
-        val client:FlipperClient = AndroidFlipperClient.getInstance(this)
+        val client: FlipperClient = AndroidFlipperClient.getInstance(this)
         client.addPlugin(InspectorFlipperPlugin(this, DescriptorMapping.withDefaults()))
         client.addPlugin(DatabasesFlipperPlugin(this))
         client.start()
